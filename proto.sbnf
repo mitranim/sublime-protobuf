@@ -1,0 +1,91 @@
+EXTENSIONS = 'proto'
+
+prototype        : (~comment)* ;
+main             : (~any)* ;
+comment          : comment-line | comment-block ;
+any              : punctuation | number | string | identifier ;
+punctuation      : parens | brackets | braces | punctuation-atom ;
+identifier       : keyword | ident-other ;
+keyword          : bool | package | service | message | enum | kw-other ;
+atom             : punctuation-atom | keyword-atom | number | string | ident-other ;
+punctuation-atom : dot | comma | semi | equal ;
+keyword-atom     : bool | kw-other ;
+
+IDENT = '\b[[:alpha:]_][[:alnum:]_]*\b'
+
+comment-line{comment.line}   : '//'{punctuation.definition.comment}~'\n' ;
+comment-block{comment.block} : comment-block-begin (~comment-block)* ~comment-block-end ;
+comment-block-begin          : `/*`{punctuation.definition.comment.begin} ;
+comment-block-end            : `*/`{punctuation.definition.comment.end} ;
+
+parens        : paren-begin   (~any)* paren-end ;
+brackets      : bracket-begin (~any)* bracket-end ;
+braces        : brace-begin   (~any)* brace-end ;
+paren-begin   : `(`{punctuation.section.parens.begin} ;
+paren-end     : `)`{punctuation.section.parens.end} ;
+bracket-begin : `[`{punctuation.section.brackets.begin} ;
+bracket-end   : `]`{punctuation.section.brackets.end} ;
+brace-begin   : `{`{punctuation.section.braces.begin} ;
+brace-end     : `}`{punctuation.section.braces.end} ;
+angle-begin   : `<`{punctuation.section.angle.begin} ;
+angle-end     : `>`{punctuation.section.angle.end} ;
+block         : brace-begin (~any)* brace-end ;
+dot           : `.`{punctuation.accessor.dot} ;
+comma         : `,`{punctuation.separator.sequence} ;
+semi          : `;`{punctuation.terminator} ;
+equal         : `=`{keyword} ;
+
+number       : number-float | number-int ;
+number-float : '\d+(\.)\d+'{constant.numeric, 1: punctuation.separator.decimal} ;
+number-int   : '\d+'{constant.numeric} ;
+
+string : string-double ;
+
+# TODO: support escapes.
+string-double{string.double, include-prototype: false} :
+  '"'{punctuation.definition.string.begin}
+  ~`"`{punctuation.definition.string.end}
+;
+
+bool{constant.language.bool} : word['true|false'] ;
+package : kw['package'] decl-ns ;
+service : kw['service'] decl-type service-block? ;
+message : kw['message'] decl-type message-block?  ;
+enum : kw['enum'] decl-type enum-block? ;
+kw-other{keyword} : word['syntax|option|import'] ;
+
+service-block : brace-begin (~service-entry)* ~brace-end ;
+service-entry : service-entry-rpc ;
+service-entry-rpc : kw['rpc'] decl-func func-params kw['returns'] func-params entry-end ;
+
+message-block : brace-begin (~message-entry)* ~brace-end ;
+message-entry : keyword | message-entry-member ;
+message-entry-member : kw['repeated']? storage-type decl-member equal number entry-end ;
+
+enum-block : brace-begin (~enum-entry)* ~brace-end ;
+enum-entry : decl-member equal number entry-end ;
+
+attrs : bracket-begin (~attr-entry)* bracket-end ;
+attr-entry : atom ;
+
+func-params : paren-begin (~func-param)* paren-end ;
+func-param : kw['stream']? storage-type comma? ;
+
+opt : attrs? block? ;
+entry-end : opt semi? ;
+
+storage-type : ident-ns* type ;
+type{storage.type} : IDENT type-params? ;
+type-params : angle-begin (~type-param)* angle-end ;
+type-param : storage-type comma? ;
+
+word[pattern] : '\b(?:#[pattern])\b' ;
+kw[pattern]{keyword} : word[pattern] ;
+ident-other : ident-ns* id['variable.other'] ;
+id[scope]{#[scope]} : IDENT ;
+ident-ns : ident-ns['variable.other.namespace'] ;
+ident-ns[scope] : '(#[IDENT])\s*(\.)\s*'{1: #[scope], 2: punctuation.accessor.dot} ;
+decl-type : ident-ns* id['entity.name.type'] ;
+decl-ns : ident-ns* id['entity.name.namespace'] ;
+decl-member : ident-ns* id['variable.other.member.declaration'] ;
+decl-func : ident-ns* id['entity.name.function'] ;

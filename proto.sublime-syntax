@@ -1,0 +1,1038 @@
+%YAML 1.2
+---
+# http://www.sublimetext.com/docs/syntax.html
+version: 2
+name: proto
+file_extensions:
+  - proto
+scope: source.proto
+contexts:
+  # Rule: attrs
+  attrs|0:
+    - match: '\.'
+      scope: punctuation.accessor.dot.proto
+    - match: ','
+      scope: punctuation.separator.sequence.proto
+    - match: ';'
+      scope: punctuation.terminator.proto
+    - match: '='
+      scope: keyword.proto
+    - match: '\b(?:true|false)\b'
+      scope: constant.language.bool.proto
+    - match: '\b(?:syntax|option|import)\b'
+      scope: keyword.proto
+    - match: '\d+(\.)\d+'
+      scope: constant.numeric.proto
+      captures:
+        1: punctuation.separator.decimal.proto
+    - match: '\d+'
+      scope: constant.numeric.proto
+    - match: '"'
+      scope: string.double.proto punctuation.definition.string.begin.proto
+      push: string-double|0
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      push: ident-other|0
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: variable.other.proto
+    - match: '\]'
+      scope: punctuation.section.brackets.end.proto
+      pop: true
+    - match: '(?=\S)'
+      set: attrs|1
+  # Rule: attrs
+  attrs|1:
+    - match: '\.'
+      scope: punctuation.accessor.dot.proto
+      set: attrs|0
+    - match: ','
+      scope: punctuation.separator.sequence.proto
+      set: attrs|0
+    - match: ';'
+      scope: punctuation.terminator.proto
+      set: attrs|0
+    - match: '='
+      scope: keyword.proto
+      set: attrs|0
+    - match: '\b(?:true|false)\b'
+      scope: constant.language.bool.proto
+      set: attrs|0
+    - match: '\b(?:syntax|option|import)\b'
+      scope: keyword.proto
+      set: attrs|0
+    - match: '\d+(\.)\d+'
+      scope: constant.numeric.proto
+      captures:
+        1: punctuation.separator.decimal.proto
+      set: attrs|0
+    - match: '\d+'
+      scope: constant.numeric.proto
+      set: attrs|0
+    - match: '"'
+      scope: string.double.proto punctuation.definition.string.begin.proto
+      set: [attrs|0, string-double|0]
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      set: [attrs|0, ident-other|0]
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: variable.other.proto
+      set: attrs|0
+  # Rule: block
+  block|0:
+    - match: '\{'
+      scope: punctuation.section.braces.begin.proto
+      set: block|1
+    - match: '(?=\S)'
+      pop: true
+  # Rule: block
+  block|1:
+    - match: '\('
+      scope: punctuation.section.parens.begin.proto
+      push: parens|0
+    - match: '\['
+      scope: punctuation.section.brackets.begin.proto
+      push: brackets|0
+    - match: '\{'
+      scope: punctuation.section.braces.begin.proto
+      push: braces|0
+    - match: '\.'
+      scope: punctuation.accessor.dot.proto
+    - match: ','
+      scope: punctuation.separator.sequence.proto
+    - match: ';'
+      scope: punctuation.terminator.proto
+    - match: '='
+      scope: keyword.proto
+    - match: '\d+(\.)\d+'
+      scope: constant.numeric.proto
+      captures:
+        1: punctuation.separator.decimal.proto
+    - match: '\d+'
+      scope: constant.numeric.proto
+    - match: '"'
+      scope: string.double.proto punctuation.definition.string.begin.proto
+      push: string-double|0
+    - match: '\b(?:true|false)\b'
+      scope: constant.language.bool.proto
+    - match: '\b(?:package)\b'
+      scope: keyword.proto
+      push: decl-ns|0
+    - match: '\b(?:service)\b'
+      scope: keyword.proto
+      push: service|0
+    - match: '\b(?:message)\b'
+      scope: keyword.proto
+      push: message|0
+    - match: '\b(?:enum)\b'
+      scope: keyword.proto
+      push: enum|0
+    - match: '\b(?:syntax|option|import)\b'
+      scope: keyword.proto
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      push: ident-other|0
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: variable.other.proto
+    - match: '\}'
+      scope: punctuation.section.braces.end.proto
+      pop: true
+    - match: '(?=\S)'
+      set: block|2
+  # Rule: block
+  block|2:
+    - match: '\('
+      scope: punctuation.section.parens.begin.proto
+      set: [block|1, parens|0]
+    - match: '\['
+      scope: punctuation.section.brackets.begin.proto
+      set: [block|1, brackets|0]
+    - match: '\{'
+      scope: punctuation.section.braces.begin.proto
+      set: [block|1, braces|0]
+    - match: '\.'
+      scope: punctuation.accessor.dot.proto
+      set: block|1
+    - match: ','
+      scope: punctuation.separator.sequence.proto
+      set: block|1
+    - match: ';'
+      scope: punctuation.terminator.proto
+      set: block|1
+    - match: '='
+      scope: keyword.proto
+      set: block|1
+    - match: '\d+(\.)\d+'
+      scope: constant.numeric.proto
+      captures:
+        1: punctuation.separator.decimal.proto
+      set: block|1
+    - match: '\d+'
+      scope: constant.numeric.proto
+      set: block|1
+    - match: '"'
+      scope: string.double.proto punctuation.definition.string.begin.proto
+      set: [block|1, string-double|0]
+    - match: '\b(?:true|false)\b'
+      scope: constant.language.bool.proto
+      set: block|1
+    - match: '\b(?:package)\b'
+      scope: keyword.proto
+      set: [block|1, decl-ns|0]
+    - match: '\b(?:service)\b'
+      scope: keyword.proto
+      set: [block|1, service|0]
+    - match: '\b(?:message)\b'
+      scope: keyword.proto
+      set: [block|1, message|0]
+    - match: '\b(?:enum)\b'
+      scope: keyword.proto
+      set: [block|1, enum|0]
+    - match: '\b(?:syntax|option|import)\b'
+      scope: keyword.proto
+      set: block|1
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      set: [block|1, ident-other|0]
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: variable.other.proto
+      set: block|1
+  # Rule: braces
+  braces|0:
+    - match: '\('
+      scope: punctuation.section.parens.begin.proto
+      push: parens|0
+    - match: '\['
+      scope: punctuation.section.brackets.begin.proto
+      push: brackets|0
+    - match: '\{'
+      scope: punctuation.section.braces.begin.proto
+      push: braces|0
+    - match: '\.'
+      scope: punctuation.accessor.dot.proto
+    - match: ','
+      scope: punctuation.separator.sequence.proto
+    - match: ';'
+      scope: punctuation.terminator.proto
+    - match: '='
+      scope: keyword.proto
+    - match: '\d+(\.)\d+'
+      scope: constant.numeric.proto
+      captures:
+        1: punctuation.separator.decimal.proto
+    - match: '\d+'
+      scope: constant.numeric.proto
+    - match: '"'
+      scope: string.double.proto punctuation.definition.string.begin.proto
+      push: string-double|0
+    - match: '\b(?:true|false)\b'
+      scope: constant.language.bool.proto
+    - match: '\b(?:package)\b'
+      scope: keyword.proto
+      push: decl-ns|0
+    - match: '\b(?:service)\b'
+      scope: keyword.proto
+      push: service|0
+    - match: '\b(?:message)\b'
+      scope: keyword.proto
+      push: message|0
+    - match: '\b(?:enum)\b'
+      scope: keyword.proto
+      push: enum|0
+    - match: '\b(?:syntax|option|import)\b'
+      scope: keyword.proto
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      push: ident-other|0
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: variable.other.proto
+    - match: '\}'
+      scope: punctuation.section.braces.end.proto
+      pop: true
+    - match: '(?=\S)'
+      set: braces|1
+  # Rule: braces
+  braces|1:
+    - match: '\('
+      scope: punctuation.section.parens.begin.proto
+      set: [braces|0, parens|0]
+    - match: '\['
+      scope: punctuation.section.brackets.begin.proto
+      set: [braces|0, brackets|0]
+    - match: '\{'
+      scope: punctuation.section.braces.begin.proto
+      set: [braces|0, braces|0]
+    - match: '\.'
+      scope: punctuation.accessor.dot.proto
+      set: braces|0
+    - match: ','
+      scope: punctuation.separator.sequence.proto
+      set: braces|0
+    - match: ';'
+      scope: punctuation.terminator.proto
+      set: braces|0
+    - match: '='
+      scope: keyword.proto
+      set: braces|0
+    - match: '\d+(\.)\d+'
+      scope: constant.numeric.proto
+      captures:
+        1: punctuation.separator.decimal.proto
+      set: braces|0
+    - match: '\d+'
+      scope: constant.numeric.proto
+      set: braces|0
+    - match: '"'
+      scope: string.double.proto punctuation.definition.string.begin.proto
+      set: [braces|0, string-double|0]
+    - match: '\b(?:true|false)\b'
+      scope: constant.language.bool.proto
+      set: braces|0
+    - match: '\b(?:package)\b'
+      scope: keyword.proto
+      set: [braces|0, decl-ns|0]
+    - match: '\b(?:service)\b'
+      scope: keyword.proto
+      set: [braces|0, service|0]
+    - match: '\b(?:message)\b'
+      scope: keyword.proto
+      set: [braces|0, message|0]
+    - match: '\b(?:enum)\b'
+      scope: keyword.proto
+      set: [braces|0, enum|0]
+    - match: '\b(?:syntax|option|import)\b'
+      scope: keyword.proto
+      set: braces|0
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      set: [braces|0, ident-other|0]
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: variable.other.proto
+      set: braces|0
+  # Rule: brackets
+  brackets|0:
+    - match: '\('
+      scope: punctuation.section.parens.begin.proto
+      push: parens|0
+    - match: '\['
+      scope: punctuation.section.brackets.begin.proto
+      push: brackets|0
+    - match: '\{'
+      scope: punctuation.section.braces.begin.proto
+      push: braces|0
+    - match: '\.'
+      scope: punctuation.accessor.dot.proto
+    - match: ','
+      scope: punctuation.separator.sequence.proto
+    - match: ';'
+      scope: punctuation.terminator.proto
+    - match: '='
+      scope: keyword.proto
+    - match: '\d+(\.)\d+'
+      scope: constant.numeric.proto
+      captures:
+        1: punctuation.separator.decimal.proto
+    - match: '\d+'
+      scope: constant.numeric.proto
+    - match: '"'
+      scope: string.double.proto punctuation.definition.string.begin.proto
+      push: string-double|0
+    - match: '\b(?:true|false)\b'
+      scope: constant.language.bool.proto
+    - match: '\b(?:package)\b'
+      scope: keyword.proto
+      push: decl-ns|0
+    - match: '\b(?:service)\b'
+      scope: keyword.proto
+      push: service|0
+    - match: '\b(?:message)\b'
+      scope: keyword.proto
+      push: message|0
+    - match: '\b(?:enum)\b'
+      scope: keyword.proto
+      push: enum|0
+    - match: '\b(?:syntax|option|import)\b'
+      scope: keyword.proto
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      push: ident-other|0
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: variable.other.proto
+    - match: '\]'
+      scope: punctuation.section.brackets.end.proto
+      pop: true
+    - match: '(?=\S)'
+      set: brackets|1
+  # Rule: brackets
+  brackets|1:
+    - match: '\('
+      scope: punctuation.section.parens.begin.proto
+      set: [brackets|0, parens|0]
+    - match: '\['
+      scope: punctuation.section.brackets.begin.proto
+      set: [brackets|0, brackets|0]
+    - match: '\{'
+      scope: punctuation.section.braces.begin.proto
+      set: [brackets|0, braces|0]
+    - match: '\.'
+      scope: punctuation.accessor.dot.proto
+      set: brackets|0
+    - match: ','
+      scope: punctuation.separator.sequence.proto
+      set: brackets|0
+    - match: ';'
+      scope: punctuation.terminator.proto
+      set: brackets|0
+    - match: '='
+      scope: keyword.proto
+      set: brackets|0
+    - match: '\d+(\.)\d+'
+      scope: constant.numeric.proto
+      captures:
+        1: punctuation.separator.decimal.proto
+      set: brackets|0
+    - match: '\d+'
+      scope: constant.numeric.proto
+      set: brackets|0
+    - match: '"'
+      scope: string.double.proto punctuation.definition.string.begin.proto
+      set: [brackets|0, string-double|0]
+    - match: '\b(?:true|false)\b'
+      scope: constant.language.bool.proto
+      set: brackets|0
+    - match: '\b(?:package)\b'
+      scope: keyword.proto
+      set: [brackets|0, decl-ns|0]
+    - match: '\b(?:service)\b'
+      scope: keyword.proto
+      set: [brackets|0, service|0]
+    - match: '\b(?:message)\b'
+      scope: keyword.proto
+      set: [brackets|0, message|0]
+    - match: '\b(?:enum)\b'
+      scope: keyword.proto
+      set: [brackets|0, enum|0]
+    - match: '\b(?:syntax|option|import)\b'
+      scope: keyword.proto
+      set: brackets|0
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      set: [brackets|0, ident-other|0]
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: variable.other.proto
+      set: brackets|0
+  # Rule: comma
+  comma|0:
+    - match: ','
+      scope: punctuation.separator.sequence.proto
+      pop: true
+    - match: '(?=\S)'
+      pop: true
+  # Rule: comment-block
+  comment-block|0:
+    - meta_content_scope: comment.block.proto
+    - match: '/\*'
+      scope: comment.block.proto comment.block.proto punctuation.definition.comment.begin.proto
+      push: [comment-block|meta, comment-block|0]
+    - match: '\*/'
+      scope: comment.block.proto punctuation.definition.comment.end.proto
+      pop: true
+  # Meta scope context for comment-block
+  comment-block|meta:
+    - meta_content_scope: comment.block.proto
+    - match: ''
+      pop: true
+  # Rule: comment-line
+  comment-line|0:
+    - meta_content_scope: comment.line.proto
+    - match: '\n'
+      scope: comment.line.proto
+      pop: true
+  # Rule: decl-func
+  decl-func|0:
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: entity.name.function.proto
+      pop: true
+    - match: '\S'
+      scope: invalid.illegal.proto
+      pop: true
+  # Rule: decl-member
+  decl-member|0:
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: variable.other.member.declaration.proto
+      pop: true
+    - match: '\S'
+      scope: invalid.illegal.proto
+      pop: true
+  # Rule: decl-ns
+  decl-ns|0:
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: entity.name.namespace.proto
+      pop: true
+    - match: '\S'
+      scope: invalid.illegal.proto
+      pop: true
+  # Rule: decl-type
+  decl-type|0:
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: entity.name.type.proto
+      pop: true
+    - match: '\S'
+      scope: invalid.illegal.proto
+      pop: true
+  # Rule: entry-end
+  entry-end|0:
+    - match: '\['
+      scope: punctuation.section.brackets.begin.proto
+      set: [semi|0, block|0, attrs|0]
+    - match: '\{'
+      scope: punctuation.section.braces.begin.proto
+      set: [semi|0, block|1]
+    - match: ';'
+      scope: punctuation.terminator.proto
+      pop: true
+    - match: '(?=\S)'
+      pop: true
+  # Rule: enum-block
+  enum-block|0:
+    - match: '\{'
+      scope: punctuation.section.braces.begin.proto
+      set: enum-block|1
+    - match: '(?=\S)'
+      pop: true
+  # Rule: enum-block
+  enum-block|1:
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      push: [enum-entry|0, decl-member|0]
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: variable.other.member.declaration.proto
+      push: enum-entry|0
+    - match: '\}'
+      scope: punctuation.section.braces.end.proto
+      pop: true
+  # Rule: enum-entry
+  enum-entry|0:
+    - match: '='
+      scope: keyword.proto
+      set: enum-entry|1
+    - match: '\S'
+      scope: invalid.illegal.proto
+      pop: true
+  # Rule: enum-entry
+  enum-entry|1:
+    - match: '\d+(\.)\d+'
+      scope: constant.numeric.proto
+      captures:
+        1: punctuation.separator.decimal.proto
+      set: entry-end|0
+    - match: '\d+'
+      scope: constant.numeric.proto
+      set: entry-end|0
+    - match: '\S'
+      scope: invalid.illegal.proto
+      pop: true
+  # Rule: enum
+  enum|0:
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      set: [enum-block|0, decl-type|0]
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: entity.name.type.proto
+      set: enum-block|0
+    - match: '\S'
+      scope: invalid.illegal.proto
+      pop: true
+  # Rule: func-params
+  func-params|0:
+    - match: '\b(?:stream)\b'
+      scope: keyword.proto
+      push: func-param|0
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      push: [comma|0, storage-type|0]
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: storage.type.proto
+      push: [comma|0, type|meta, type-params|0]
+    - match: '\)'
+      scope: punctuation.section.parens.end.proto
+      pop: true
+    - match: '(?=\S)'
+      set: func-params|1
+  # Rule: func-params
+  func-params|1:
+    - match: '\b(?:stream)\b'
+      scope: keyword.proto
+      set: [func-params|0, func-param|0]
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      set: [func-params|0, comma|0, storage-type|0]
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: storage.type.proto
+      set: [func-params|0, comma|0, type|meta, type-params|0]
+  # Rule: func-param
+  func-param|0:
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      set: [comma|0, storage-type|0]
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: storage.type.proto
+      set: [comma|0, type|meta, type-params|0]
+    - match: '\S'
+      scope: invalid.illegal.proto
+      pop: true
+  # Rule: ident-other
+  ident-other|0:
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: variable.other.proto
+      pop: true
+    - match: '\S'
+      scope: invalid.illegal.proto
+      pop: true
+  # Rule: main
+  main:
+    - match: '\('
+      scope: punctuation.section.parens.begin.proto
+      push: parens|0
+    - match: '\['
+      scope: punctuation.section.brackets.begin.proto
+      push: brackets|0
+    - match: '\{'
+      scope: punctuation.section.braces.begin.proto
+      push: braces|0
+    - match: '\.'
+      scope: punctuation.accessor.dot.proto
+    - match: ','
+      scope: punctuation.separator.sequence.proto
+    - match: ';'
+      scope: punctuation.terminator.proto
+    - match: '='
+      scope: keyword.proto
+    - match: '\d+(\.)\d+'
+      scope: constant.numeric.proto
+      captures:
+        1: punctuation.separator.decimal.proto
+    - match: '\d+'
+      scope: constant.numeric.proto
+    - match: '"'
+      scope: string.double.proto punctuation.definition.string.begin.proto
+      push: string-double|0
+    - match: '\b(?:true|false)\b'
+      scope: constant.language.bool.proto
+    - match: '\b(?:package)\b'
+      scope: keyword.proto
+      push: decl-ns|0
+    - match: '\b(?:service)\b'
+      scope: keyword.proto
+      push: service|0
+    - match: '\b(?:message)\b'
+      scope: keyword.proto
+      push: message|0
+    - match: '\b(?:enum)\b'
+      scope: keyword.proto
+      push: enum|0
+    - match: '\b(?:syntax|option|import)\b'
+      scope: keyword.proto
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      push: ident-other|0
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: variable.other.proto
+  # Rule: message-block
+  message-block|0:
+    - match: '\{'
+      scope: punctuation.section.braces.begin.proto
+      set: message-block|1
+    - match: '(?=\S)'
+      pop: true
+  # Rule: message-block
+  message-block|1:
+    - match: '\b(?:true|false)\b'
+      scope: constant.language.bool.proto
+    - match: '\b(?:package)\b'
+      scope: keyword.proto
+      push: decl-ns|0
+    - match: '\b(?:service)\b'
+      scope: keyword.proto
+      push: service|0
+    - match: '\b(?:message)\b'
+      scope: keyword.proto
+      push: message|0
+    - match: '\b(?:enum)\b'
+      scope: keyword.proto
+      push: enum|0
+    - match: '\b(?:syntax|option|import)\b'
+      scope: keyword.proto
+    - match: '\b(?:repeated)\b'
+      scope: keyword.proto
+      push: message-entry-member|0
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      push: [message-entry-member|1, storage-type|0]
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: storage.type.proto
+      push: [message-entry-member|1, type|meta, type-params|0]
+    - match: '\}'
+      scope: punctuation.section.braces.end.proto
+      pop: true
+  # Rule: message-entry-member
+  message-entry-member|0:
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      set: [message-entry-member|1, storage-type|0]
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: storage.type.proto
+      set: [message-entry-member|1, type|meta, type-params|0]
+    - match: '\S'
+      scope: invalid.illegal.proto
+      pop: true
+  # Rule: message-entry-member
+  message-entry-member|1:
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      set: [message-entry-member|2, decl-member|0]
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: variable.other.member.declaration.proto
+      set: message-entry-member|2
+    - match: '\S'
+      scope: invalid.illegal.proto
+      pop: true
+  # Rule: message-entry-member
+  message-entry-member|2:
+    - match: '='
+      scope: keyword.proto
+      set: message-entry-member|3
+    - match: '\S'
+      scope: invalid.illegal.proto
+      pop: true
+  # Rule: message-entry-member
+  message-entry-member|3:
+    - match: '\d+(\.)\d+'
+      scope: constant.numeric.proto
+      captures:
+        1: punctuation.separator.decimal.proto
+      set: entry-end|0
+    - match: '\d+'
+      scope: constant.numeric.proto
+      set: entry-end|0
+    - match: '\S'
+      scope: invalid.illegal.proto
+      pop: true
+  # Rule: message
+  message|0:
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      set: [message-block|0, decl-type|0]
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: entity.name.type.proto
+      set: message-block|0
+    - match: '\S'
+      scope: invalid.illegal.proto
+      pop: true
+  # Rule: parens
+  parens|0:
+    - match: '\('
+      scope: punctuation.section.parens.begin.proto
+      push: parens|0
+    - match: '\['
+      scope: punctuation.section.brackets.begin.proto
+      push: brackets|0
+    - match: '\{'
+      scope: punctuation.section.braces.begin.proto
+      push: braces|0
+    - match: '\.'
+      scope: punctuation.accessor.dot.proto
+    - match: ','
+      scope: punctuation.separator.sequence.proto
+    - match: ';'
+      scope: punctuation.terminator.proto
+    - match: '='
+      scope: keyword.proto
+    - match: '\d+(\.)\d+'
+      scope: constant.numeric.proto
+      captures:
+        1: punctuation.separator.decimal.proto
+    - match: '\d+'
+      scope: constant.numeric.proto
+    - match: '"'
+      scope: string.double.proto punctuation.definition.string.begin.proto
+      push: string-double|0
+    - match: '\b(?:true|false)\b'
+      scope: constant.language.bool.proto
+    - match: '\b(?:package)\b'
+      scope: keyword.proto
+      push: decl-ns|0
+    - match: '\b(?:service)\b'
+      scope: keyword.proto
+      push: service|0
+    - match: '\b(?:message)\b'
+      scope: keyword.proto
+      push: message|0
+    - match: '\b(?:enum)\b'
+      scope: keyword.proto
+      push: enum|0
+    - match: '\b(?:syntax|option|import)\b'
+      scope: keyword.proto
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      push: ident-other|0
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: variable.other.proto
+    - match: '\)'
+      scope: punctuation.section.parens.end.proto
+      pop: true
+    - match: '(?=\S)'
+      set: parens|1
+  # Rule: parens
+  parens|1:
+    - match: '\('
+      scope: punctuation.section.parens.begin.proto
+      set: [parens|0, parens|0]
+    - match: '\['
+      scope: punctuation.section.brackets.begin.proto
+      set: [parens|0, brackets|0]
+    - match: '\{'
+      scope: punctuation.section.braces.begin.proto
+      set: [parens|0, braces|0]
+    - match: '\.'
+      scope: punctuation.accessor.dot.proto
+      set: parens|0
+    - match: ','
+      scope: punctuation.separator.sequence.proto
+      set: parens|0
+    - match: ';'
+      scope: punctuation.terminator.proto
+      set: parens|0
+    - match: '='
+      scope: keyword.proto
+      set: parens|0
+    - match: '\d+(\.)\d+'
+      scope: constant.numeric.proto
+      captures:
+        1: punctuation.separator.decimal.proto
+      set: parens|0
+    - match: '\d+'
+      scope: constant.numeric.proto
+      set: parens|0
+    - match: '"'
+      scope: string.double.proto punctuation.definition.string.begin.proto
+      set: [parens|0, string-double|0]
+    - match: '\b(?:true|false)\b'
+      scope: constant.language.bool.proto
+      set: parens|0
+    - match: '\b(?:package)\b'
+      scope: keyword.proto
+      set: [parens|0, decl-ns|0]
+    - match: '\b(?:service)\b'
+      scope: keyword.proto
+      set: [parens|0, service|0]
+    - match: '\b(?:message)\b'
+      scope: keyword.proto
+      set: [parens|0, message|0]
+    - match: '\b(?:enum)\b'
+      scope: keyword.proto
+      set: [parens|0, enum|0]
+    - match: '\b(?:syntax|option|import)\b'
+      scope: keyword.proto
+      set: parens|0
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      set: [parens|0, ident-other|0]
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: variable.other.proto
+      set: parens|0
+  # Rule: prototype
+  prototype:
+    - match: '//'
+      scope: comment.line.proto punctuation.definition.comment.proto
+      push: comment-line|0
+    - match: '/\*'
+      scope: comment.block.proto punctuation.definition.comment.begin.proto
+      push: comment-block|0
+  # Rule: semi
+  semi|0:
+    - match: ';'
+      scope: punctuation.terminator.proto
+      pop: true
+    - match: '(?=\S)'
+      pop: true
+  # Rule: service-block
+  service-block|0:
+    - match: '\{'
+      scope: punctuation.section.braces.begin.proto
+      set: service-block|1
+    - match: '(?=\S)'
+      pop: true
+  # Rule: service-block
+  service-block|1:
+    - match: '\b(?:rpc)\b'
+      scope: keyword.proto
+      push: service-entry-rpc|0
+    - match: '\}'
+      scope: punctuation.section.braces.end.proto
+      pop: true
+  # Rule: service-entry-rpc
+  service-entry-rpc|0:
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      set: [service-entry-rpc|1, decl-func|0]
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: entity.name.function.proto
+      set: service-entry-rpc|1
+    - match: '\S'
+      scope: invalid.illegal.proto
+      pop: true
+  # Rule: service-entry-rpc
+  service-entry-rpc|1:
+    - match: '\('
+      scope: punctuation.section.parens.begin.proto
+      set: [service-entry-rpc|2, func-params|0]
+    - match: '\S'
+      scope: invalid.illegal.proto
+      pop: true
+  # Rule: service-entry-rpc
+  service-entry-rpc|2:
+    - match: '\b(?:returns)\b'
+      scope: keyword.proto
+      set: service-entry-rpc|3
+    - match: '\S'
+      scope: invalid.illegal.proto
+      pop: true
+  # Rule: service-entry-rpc
+  service-entry-rpc|3:
+    - match: '\('
+      scope: punctuation.section.parens.begin.proto
+      set: [entry-end|0, func-params|0]
+    - match: '\S'
+      scope: invalid.illegal.proto
+      pop: true
+  # Rule: service
+  service|0:
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      set: [service-block|0, decl-type|0]
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: entity.name.type.proto
+      set: service-block|0
+    - match: '\S'
+      scope: invalid.illegal.proto
+      pop: true
+  # Rule: storage-type
+  storage-type|0:
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: storage.type.proto
+      set: [type|meta, type-params|0]
+    - match: '\S'
+      scope: invalid.illegal.proto
+      pop: true
+  # Rule: string-double
+  string-double|0:
+    - meta_content_scope: string.double.proto
+    - meta_include_prototype: false
+    - match: '"'
+      scope: string.double.proto punctuation.definition.string.end.proto
+      pop: true
+  # Rule: type-params
+  type-params|0:
+    - match: '<'
+      scope: punctuation.section.angle.begin.proto
+      set: type-params|1
+    - match: '(?=\S)'
+      pop: true
+  # Rule: type-params
+  type-params|1:
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      push: [comma|0, storage-type|0]
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: storage.type.proto
+      push: [comma|0, type|meta, type-params|0]
+    - match: '>'
+      scope: punctuation.section.angle.end.proto
+      pop: true
+    - match: '(?=\S)'
+      set: type-params|2
+  # Rule: type-params
+  type-params|2:
+    - match: '(\b[[:alpha:]_][[:alnum:]_]*\b)\s*(\.)\s*'
+      captures:
+        1: variable.other.namespace.proto
+        2: punctuation.accessor.dot.proto
+      set: [type-params|1, comma|0, storage-type|0]
+    - match: '\b[[:alpha:]_][[:alnum:]_]*\b'
+      scope: storage.type.proto
+      set: [type-params|1, comma|0, type|meta, type-params|0]
+  # Meta scope context for type
+  type|meta:
+    - meta_content_scope: storage.type.proto
+    - match: ''
+      pop: true

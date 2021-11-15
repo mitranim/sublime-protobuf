@@ -1,0 +1,11 @@
+# Default blacklist.
+.DS_Store
+
+# Repo root = whitelist.
+/*
+!unlicense
+!/.*ignore
+!/*.md
+!/*.tmPreferences
+!/*.sbnf
+!/*.sublime-syntax
